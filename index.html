@@ -1,0 +1,526 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090d">
+<title>My Rating</title>
+
+<style>
+:root {
+    --bg: #08090d;
+    --panel: #10131b;
+    --green: #a4ff36;
+    --purple: #a855f7;
+    --red: #ff365e;
+    --text: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Courier New", monospace;
+    overflow-x: hidden;
+}
+
+/* Background effects */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: .12;
+    background: repeating-linear-gradient(
+        transparent 0px,
+        transparent 3px,
+        #000 4px
+    );
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9;
+    background: radial-gradient(ellipse, transparent 50%, #000b 100%);
+}
+
+.background-glow {
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    background: var(--purple);
+    filter: blur(140px);
+    opacity: .12;
+    top: 10%;
+    left: 30%;
+    pointer-events: none;
+}
+
+/* Main */
+
+.container {
+    width: min(950px, 92%);
+    margin: auto;
+    padding-bottom: 80px;
+}
+
+header {
+    text-align: center;
+    padding: 55px 0 30px;
+}
+
+.logo {
+    width: min(650px, 95%);
+    max-height: 390px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px #a855f788);
+    animation: logoFloat 5s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.main-title {
+    font-size: clamp(35px, 8vw, 75px);
+    color: var(--green);
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-shadow: 4px 4px var(--purple), 0 0 25px #a4ff3666;
+    margin: 25px 0 5px;
+    animation: titleGlitch 5s infinite;
+}
+
+@keyframes titleGlitch {
+    0%, 93%, 100% { transform: translate(0); }
+    94% { transform: translate(-3px, 1px); }
+    96% { transform: translate(3px, -1px); }
+    98% { transform: translate(-2px, 0); }
+}
+
+.subtitle {
+    color: #888;
+    font-size: 12px;
+    letter-spacing: 4px;
+}
+
+.status {
+    display: inline-block;
+    color: var(--green);
+    border: 1px solid var(--green);
+    padding: 8px 18px;
+    margin-top: 22px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    box-shadow: 0 0 12px #a4ff3622;
+}
+
+/* Music player */
+
+.music {
+    background: var(--panel);
+    border: 1px solid #333;
+    padding: 18px;
+    margin: 30px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    box-shadow: 5px 5px 0 #a855f722;
+}
+
+.music-info {
+    color: var(--green);
+    font-size: 13px;
+}
+
+.music-info small {
+    display: block;
+    color: #777;
+    margin-top: 5px;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    background: var(--green);
+    color: #08090d;
+    border: 0;
+    padding: 12px 22px;
+    font-weight: bold;
+    transition: .15s;
+}
+
+button:hover {
+    background: white;
+    box-shadow: 0 0 18px var(--green);
+}
+
+/* Sections */
+
+.section {
+    margin-top: 35px;
+    background: var(--panel);
+    border: 1px solid #292d38;
+    padding: 25px;
+    position: relative;
+    box-shadow: 6px 6px 0 #000;
+}
+
+.section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--purple);
+}
+
+.section.global::before {
+    background: var(--green);
+}
+
+.section-title {
+    font-size: clamp(20px, 4vw, 29px);
+    margin: 0 0 25px;
+    color: var(--purple);
+    letter-spacing: 2px;
+    border-bottom: 1px dashed #454552;
+    padding-bottom: 15px;
+}
+
+.global .section-title {
+    color: var(--green);
+}
+
+.section-title span {
+    color: #666;
+    font-size: 12px;
+    display: block;
+    margin-top: 8px;
+    letter-spacing: 3px;
+}
+
+/* Rating list */
+
+.rating-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: none;
+}
+
+.rating-list li {
+    padding: 13px 15px;
+    margin: 7px 0;
+    background: #ffffff05;
+    border-left: 2px solid #444;
+    transition: .2s;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.rating-list li:hover {
+    background: #a855f718;
+    border-left: 4px solid var(--purple);
+    padding-left: 22px;
+    color: white;
+}
+
+.global .rating-list li:hover {
+    background: #a4ff3610;
+    border-left-color: var(--green);
+}
+
+.number {
+    color: var(--purple);
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.global .number {
+    color: var(--green);
+}
+
+/* Comment area */
+
+.comment-box {
+    margin-top: 35px;
+    background: #151720;
+    padding: 25px;
+    border: 1px solid #333;
+    text-align: center;
+}
+
+.comment-box h2 {
+    color: var(--red);
+    font-size: 21px;
+}
+
+.comment-box p {
+    color: #999;
+    font-size: 13px;
+}
+
+.comment-box textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+    background: #08090d;
+    color: white;
+    border: 1px solid #444;
+    padding: 15px;
+    font-family: inherit;
+    outline: none;
+}
+
+.comment-box textarea:focus {
+    border-color: var(--green);
+}
+
+.comment-box button {
+    margin-top: 12px;
+    background: var(--red);
+    color: white;
+}
+
+/* Footer */
+
+footer {
+    text-align: center;
+    margin-top: 55px;
+    color: #555;
+    font-size: 11px;
+    letter-spacing: 3px;
+    line-height: 2;
+}
+
+footer strong {
+    color: var(--purple);
+}
+
+/* Small decorative elements */
+
+.divider {
+    text-align: center;
+    color: #555;
+    letter-spacing: 8px;
+    margin: 30px 0;
+    font-size: 12px;
+}
+
+::selection {
+    background: var(--green);
+    color: black;
+}
+
+/* Low-end friendly reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding-top: 35px;
+    }
+
+    .main-title {
+        letter-spacing: 3px;
+    }
+
+    .section {
+        padding: 18px;
+    }
+
+    .rating-list li {
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="background-glow"></div>
+
+<div class="container">
+
+<header>
+
+    <img src="1lgo333a.png" alt="My Rating Logo" class="logo">
+
+    <h1 class="main-title">MY RATING</h1>
+
+    <div class="subtitle">PERSONAL OPINIONS // UNSTABLE TASTE</div>
+
+    <div class="status">● SYSTEM ONLINE — RATING DATABASE LOADED</div>
+
+</header>
+
+<!-- MUSIC -->
+
+<div class="music">
+
+    <div class="music-info">
+        ♪ BACKGROUND SOUNDTRACK
+        <small>1sng123a.mp4</small>
+    </div>
+
+    <button id="musicButton" onclick="toggleMusic()">▶ PLAY MUSIC</button>
+
+    <audio id="musicPlayer" src="1sng123a.mp4" loop preload="none"></audio>
+
+</div>
+
+<div class="divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+
+<!-- PERSONAL RATING -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        RATEING YOU (TO PISS YOU OFF):
+        <span>01 // PERSONAL RANKING DATABASE</span>
+    </h2>
+
+    <ol class="rating-list">
+        <li><span class="number">01.</span> Mlp movie</li>
+        <li><span class="number">02.</span> Sonic</li>
+        <li><span class="number">03.</span> Phineas and ferb / candace</li>
+        <li><span class="number">04.</span> Undertale</li>
+        <li><span class="number">05.</span> Zelda / Tads</li>
+        <li><span class="number">06.</span> Animorphs / half life</li>
+        <li><span class="number">07.</span> Doofenshmirts / major monogram</li>
+        <li><span class="number">08.</span> Dakota and caviar dish</li>
+        <li><span class="number">08.</span> Farting cheese</li>
+    </ol>
+
+</section>
+
+<!-- GLOBAL RATING -->
+
+<section class="section global">
+
+    <h2 class="section-title">
+        GLOBAL RATING:
+        <span>02 // THE UNIVERSAL DATABASE</span>
+    </h2>
+
+    <ol class="rating-list">
+        <li><span class="number">01.</span> Chester Cheetah</li>
+        <li><span class="number">02.</span> Need for speed</li>
+        <li><span class="number">03.</span> Gta san andreas</li>
+        <li><span class="number">05.</span> Quake</li>
+        <li><span class="number">06.</span> Nintendo Switch</li>
+        <li><span class="number">07.</span> Avgn (angry videogame nerd)</li>
+        <li><span class="number">09.</span> Cdrr (chip and dale rescue rangers)</li>
+        <li><span class="number">10.</span> Nes famicom / sega</li>
+        <li><span class="number">11.</span> Miraculous Ladybug</li>
+        <li><span class="number">12.</span> 90th action (die hard, under siege)</li>
+        <li><span class="number">13.</span> Sum 41 / avril lavigne</li>
+        <li><span class="number">14.</span> William shatners tek war</li>
+        <li><span class="number">15.</span> 1995 commercials</li>
+        <li><span class="number">16.</span> Windows 95</li>
+        <li><span class="number">17.</span> MsDos games</li>
+        <li><span class="number">18.</span> "My world" - ukrainian magic society</li>
+        <li><span class="number">19.</span> Cartoon network.</li>
+        <li><span class="number">20.</span> "And what now russia is doing?.." lol</li>
+        <li><span class="number">21.</span> Modern russian movies</li>
+        <li><span class="number">22.</span> Politics</li>
+        <li><span class="number">23.</span> Cockroach life</li>
+        <li><span class="number">24.</span> World of fear and horror reimagined</li>
+        <li><span class="number">25.</span> Popular letsplayers</li>
+        <li><span class="number">26.</span> Old soviet comedy (that make you fear)</li>
+    </ol>
+
+</section>
+
+<!-- COMMENT -->
+
+<div class="comment-box">
+
+    <h2>COMMENT IF YOU AGREE :)</h2>
+
+    <p>Have an opinion? Leave your thoughts below!</p>
+
+    <textarea id="comment" placeholder="Type your opinion here..."></textarea>
+
+    <button onclick="copyComment()">COPY COMMENT</button>
+
+</div>
+
+<footer>
+    <strong>MY RATING // 2026</strong>
+    <br>
+    ALL OPINIONS ARE QUESTIONABLE.
+    <br>
+    END OF DATABASE.
+</footer>
+
+</div>
+
+<script>
+const player = document.getElementById("musicPlayer");
+const musicButton = document.getElementById("musicButton");
+
+function toggleMusic() {
+    if (player.paused) {
+        player.play().then(() => {
+            musicButton.textContent = "Ⅱ PAUSE MUSIC";
+        }).catch(() => {
+            musicButton.textContent = "▶ TRY AGAIN";
+        });
+    } else {
+        player.pause();
+        musicButton.textContent = "▶ PLAY MUSIC";
+    }
+}
+
+player.addEventListener("ended", () => {
+    musicButton.textContent = "▶ PLAY MUSIC";
+});
+
+function copyComment() {
+    const comment = document.getElementById("comment").value;
+
+    if (!comment.trim()) {
+        alert("Write something first!");
+        return;
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(comment).then(() => {
+            alert("Comment copied!");
+        });
+    } else {
+        document.getElementById("comment").select();
+        alert("Press Ctrl+C to copy your comment.");
+    }
+}
+</script>
+
+</body>
+</html>
